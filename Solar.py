@@ -35,7 +35,6 @@ edges = (
     (5, 7),
 )
 
-
 def Cube():
     glBegin(GL_LINES)
     for edge in edges:
@@ -46,6 +45,7 @@ def Cube():
 
 def Sphere1():
     sphere = gluNewQuadric()
+    glColor4f(1,1,0.2,1)
     gluSphere(sphere, 1.0, 100, 100)
 
 
@@ -77,8 +77,8 @@ def setupLighting():
     glEnable(GL_NORMALIZE)
     glShadeModel(GL_SMOOTH)
 
-
 def main():
+    speed = 1
     modestatus = 1
 
     pygame.init()
@@ -86,27 +86,31 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Solar-System")
 
-    splashscreen = pygame.image.load("SunsystemSplash_Schwertberger.jpg")
+    splashscreen = pygame.image.load("SunsystemSplash.jpg")
     splashscreen = pygame.transform.scale(splashscreen, (1280, 720))
 
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
 
         if modestatus == 1:
 
             screen.blit(splashscreen, (0, 0))
 
             for event in pygame.event.get():
-                if event.type == KEYDOWN:
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                elif event.type == KEYDOWN:
                     if event.key == K_SPACE:
                         modestatus = 2
+
+            pygame.time.wait(1)
+
         elif modestatus == 2:
             screen = pygame.display.set_mode(size, DOUBLEBUF | OPENGL)
 
-            gluPerspective(45, (size[0] / size[1]), 0.1, 50.0)
+            gluPerspective(115, (size[0] / size[1]), 0.1, 50.0)
 
             glTranslatef(0.0, 0.0, -5)
 
@@ -114,13 +118,27 @@ def main():
 
             modestatus = 3
 
-            setupLighting()
-
         elif modestatus == 3:
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-            glRotatef(1, 0, 2, 1)
+            glRotate(speed, 0, 2, 1)
             Sphere1()
+            Cube()
             pygame.time.wait(10)
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+                elif event.type == KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        modestatus = 4
+
+        elif modestatus == 4:
+            screen = pygame.display.set_mode(size)
+            modestatus = 1
+
 
         pygame.display.flip()
 
