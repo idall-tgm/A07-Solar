@@ -134,6 +134,11 @@ def main():
                 elif event.type == KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         modestatus = 4
+                    if event.key == pygame.K_RIGHT:
+                        speed += 0.5
+                    if event.key == pygame.K_LEFT and speed > 0:
+                        speed -= 0.5
+
 
         elif modestatus == 4:
             screen = pygame.display.set_mode(size)
