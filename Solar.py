@@ -82,6 +82,11 @@ def main():
     modestatus = 1
 
     pygame.init()
+
+    icon = pygame.image.load("SunsystemSplash.jpg")
+    icon = pygame.transform.scale(icon, (32, 32))
+    pygame.display.set_icon(icon)
+
     size = width, height = 1280, 720
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Solar-System")
