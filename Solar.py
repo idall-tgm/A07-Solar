@@ -8,7 +8,11 @@ import sys
 from pygame.locals import *
 
 from OpenGL.GL import *
+from OpenGL.GLUT import *
 from OpenGL.GLU import *
+import sys
+import pyglet.image
+from pyglet.gl import *
 
 def Cube():
     verticies = (
@@ -45,10 +49,77 @@ def Cube():
 
 
 def Sphere1(radius):
-    sphere = gluNewQuadric()
-    glColor4f(1,1,0.2,1)
-    gluSphere(sphere, radius, 100, 100)
+    glEnable(GL_TEXTURE_2D)
+    image=pyglet.image.load("sonne.png")
+    texture = image.get_texture()
+    glEnable(texture.target)
+    glBindTexture(texture.target, texture.id)
 
+    '''
+    rawimage = image.get_image_data()
+    format = 'RGBA'
+    pitch = rawimage.width * len(format)
+    image = rawimage.get_data(format,pitch)
+    '''
+
+    sphere = gluNewQuadric()
+    #glColor4f(1,1,0.2,1)
+    gluSphere(sphere, radius, 100, 100)
+    glDisable(GL_TEXTURE_2D)
+
+
+
+
+
+def load_Texture():
+
+    #global texture
+    glEnable(GL_TEXTURE_2D)
+    image = pyglet.image.load('sonne.png')
+
+
+   # ix = image.width
+   # iy = image.height
+    rawimage = image.get_image_data()
+    format = 'RGBA'
+    pitch = rawimage.width * len(format)
+    image = rawimage.get_data(format,pitch)
+
+    texture = image.get_texture()
+    glEnable(texture.target)
+    glBindTexture(texture.target, texture.id)
+
+    '''
+    #Create Texture
+    textures = glGenTextures(3)
+    glBindTexture(GL_TEXTURE_2D, int(textures[0]))   # 2d texture (x and y size)
+
+
+    # Create Linear Filtered Texture
+    glBindTexture(GL_TEXTURE_2D, int(textures[1]))
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR)
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
+
+
+    # Create MipMapped Texture
+    glBindTexture(GL_TEXTURE_2D, int(textures[2]))
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST)
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3,ix,iy, GL_RGBA, GL_UNSIGNED_BYTE, image)
+'''
+    sphere = gluNewQuadric()
+    gluQuadricNormals(sphere,GLU_SMOOTH)
+    gluQuadricTexture(sphere,GL_TRUE)
+
+    '''
+    glEnable(GL_TEXTURE_2D)
+    glClearColor(0.0, 0.0, 0.0, 0.0)	# This Will Clear The Background Color To Black
+    glClearDepth(1.0)					# Enables Clearing Of The Depth Buffer
+    glDepthFunc(GL_LESS)				# The Type Of Depth Test To Do
+    glEnable(GL_DEPTH_TEST)				# Enables Depth Testing
+    glShadeModel(GL_SMOOTH)				# Enables Smooth Color Shading
+    '''
 
 def setupLighting():
     """ Initializing Lighting and Light0
@@ -121,9 +192,11 @@ def main():
         elif modestatus == 2:
             screen = pygame.display.set_mode(size, DOUBLEBUF | OPENGL)
 
+            #setupLighting()
+
             gluPerspective(fov, (size[0] / size[1]), 0.1, 50.0)
 
-            glTranslatef(0.0, 0.0, -15)
+            glTranslatef(0.0, 0.0, -5)
 
 
             modestatus = 3
@@ -140,7 +213,7 @@ def main():
             glRotatef(yrot,0,1,0)
 
             Sphere1(1)
-            Cube()
+            #Cube()
             glPopMatrix()
 
             glPushMatrix()
