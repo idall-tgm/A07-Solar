@@ -4,12 +4,14 @@ __author__ = 'Berni'
 
 import pygame
 import sys
+
 from pygame.locals import *
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-verticies = (
+def Cube():
+    verticies = (
     (1, -1, -1),
     (1, 1, -1),
     (-1, 1, -1),
@@ -18,24 +20,23 @@ verticies = (
     (1, 1, 1),
     (-1, -1, 1),
     (-1, 1, 1),
-)
+    )
 
-edges = (
-    (0, 1),
-    (0, 3),
-    (0, 4),
-    (2, 1),
-    (2, 3),
-    (2, 7),
-    (6, 3),
-    (6, 4),
-    (6, 7),
-    (5, 1),
-    (5, 4),
-    (5, 7),
-)
+    edges = (
+        (0, 1),
+        (0, 3),
+        (0, 4),
+        (2, 1),
+        (2, 3),
+        (2, 7),
+        (6, 3),
+        (6, 4),
+        (6, 7),
+        (5, 1),
+        (5, 4),
+        (5, 7),
+    )
 
-def Cube():
     glBegin(GL_LINES)
     for edge in edges:
         for vertex in edge:
@@ -78,6 +79,9 @@ def setupLighting():
     glShadeModel(GL_SMOOTH)
 
 def main():
+
+    changed = False
+    fov = 105
     speed = 1
     modestatus = 1
 
@@ -90,6 +94,7 @@ def main():
     size = width, height = 1280, 720
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Solar-System")
+
 
     splashscreen = pygame.image.load("SunsystemSplash.jpg")
     splashscreen = pygame.transform.scale(splashscreen, (1280, 720))
@@ -115,20 +120,32 @@ def main():
         elif modestatus == 2:
             screen = pygame.display.set_mode(size, DOUBLEBUF | OPENGL)
 
-            gluPerspective(115, (size[0] / size[1]), 0.1, 50.0)
+            gluPerspective(fov, (size[0] / size[1]), 0.1, 50.0)
 
             glTranslatef(0.0, 0.0, -5)
 
             glRotatef(0, 0, 0, 0)
 
+            glPushMatrix()
+
+            setupLighting()
+
+            glPopMatrix()
+
             modestatus = 3
 
+
+
+
         elif modestatus == 3:
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             glRotate(speed, 0, 2, 1)
             Sphere1()
             Cube()
             pygame.time.wait(10)
+
+
 
             for event in pygame.event.get():
 
@@ -139,10 +156,17 @@ def main():
                 elif event.type == KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         modestatus = 4
-                    if event.key == pygame.K_RIGHT:
+                    if event.key == pygame.K_RIGHT and speed < 5:
                         speed += 0.5
                     if event.key == pygame.K_LEFT and speed > 0:
                         speed -= 0.5
+
+                elif event.type == MOUSEBUTTONDOWN:
+                    if event.button == 4 and fov > 50:
+                        fov -= 5
+
+                    elif event.button == 5 and fov < 150:
+                        fov += 5
 
 
         elif modestatus == 4:
