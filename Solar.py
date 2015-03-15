@@ -44,10 +44,10 @@ def Cube():
     glEnd()
 
 
-def Sphere1():
+def Sphere1(radius):
     sphere = gluNewQuadric()
     glColor4f(1,1,0.2,1)
-    gluSphere(sphere, 1.0, 100, 100)
+    gluSphere(sphere, radius, 100, 100)
 
 
 def setupLighting():
@@ -84,6 +84,7 @@ def main():
     fov = 105
     speed = 1
     modestatus = 1
+    yrot = speed
 
     pygame.init()
 
@@ -122,15 +123,8 @@ def main():
 
             gluPerspective(fov, (size[0] / size[1]), 0.1, 50.0)
 
-            glTranslatef(0.0, 0.0, -5)
+            glTranslatef(0.0, 0.0, -15)
 
-            glRotatef(0, 0, 0, 0)
-
-            glPushMatrix()
-
-            setupLighting()
-
-            glPopMatrix()
 
             modestatus = 3
 
@@ -140,9 +134,70 @@ def main():
         elif modestatus == 3:
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-            glRotate(speed, 0, 2, 1)
-            Sphere1()
+
+            glPushMatrix()
+
+            glRotatef(yrot,0,1,0)
+
+            Sphere1(1)
             Cube()
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(4.5*yrot,0,1,0.2)
+            glTranslatef(2,0,0)
+            Sphere1(0.035)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(1.6*yrot,0,1,0.2)
+            glTranslatef(3,0,0)
+            Sphere1(0.086)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(yrot,0,1,0.2)
+            glTranslatef(4,0,0)
+            Sphere1(0.091)
+
+            glTranslatef(0.1,0,0)
+            glRotatef(12*yrot,0,1,0.2)
+            Sphere1(0.025)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(yrot/2,0,1,0.2)
+            glTranslatef(5,0,0)
+            Sphere1(0.049)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(yrot/12,0,1,0.2)
+            glTranslatef(7,0,0)
+            Sphere1(0.102)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(yrot/30,0,1,0.2)
+            glTranslatef(9,0,0)
+            Sphere1(0.086)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(yrot/84,0,1,0.2)
+            glTranslatef(11,0,0)
+            Sphere1(0.037)
+            glPopMatrix()
+
+            glPushMatrix()
+            glRotatef(yrot/164,0,1,0)
+            glTranslatef(12,0,0)
+            Sphere1(0.035)
+            glPopMatrix()
+
+            yrot += speed
+
+
             pygame.time.wait(10)
 
 
