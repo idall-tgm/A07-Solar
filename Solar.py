@@ -8,16 +8,15 @@ import sys
 from pygame.locals import *
 
 from OpenGL.GL import *
-from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import sys
 import pyglet.image
 from pyglet.gl import *
 
+
 def Sphere1(radius, sphere):
-    image=pyglet.image.load("sonne.png")
+    image = pyglet.image.load("sonne.png")
     texture = image.get_texture()
-    glEnable(texture.target)
     glBindTexture(texture.target, texture.id)
 
     '''
@@ -27,16 +26,11 @@ def Sphere1(radius, sphere):
     image = rawimage.get_data(format,pitch)
     '''
 
-
-    #glColor4f(1,1,0.2,1)
+    # glColor4f(1,1,0.2,1)
     gluSphere(sphere, radius, 20, 20)
-    glDisable(GL_TEXTURE_2D)
 
 
 def Sphere2(radius, sphere):
-
-
-
     '''
     rawimage = image.get_image_data()
     format = 'RGBA'
@@ -44,46 +38,18 @@ def Sphere2(radius, sphere):
     image = rawimage.get_data(format,pitch)
     '''
 
-    #glColor4f(1,1,0.2,1)
+    # glColor4f(1,1,0.2,1)
     gluSphere(sphere, radius, 20, 20)
-    glDisable(GL_TEXTURE_2D)
 
-def setupLighting():
-    """ Initializing Lighting and Light0
-
-	:return:
-	"""
-    zeros = (0.15, 0.15, 0.15, 0.3)
-    ones = (1.0, 1.0, 1.0, 0.3)
-    half = (0.5, 0.5, 0.5, 0.5)
-
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, zeros)
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, half)
-    glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 15)
-    glLightfv(GL_LIGHT0, GL_AMBIENT, zeros)
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, ones)
-    glLightfv(GL_LIGHT0, GL_SPECULAR, half)
-    glEnable(GL_LIGHT0)
-    glEnable(GL_LIGHTING)
-    glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE)
-
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP)
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP)
-    glEnable(GL_TEXTURE_GEN_S)
-    glEnable(GL_TEXTURE_GEN_T)
-
-    glEnable(GL_COLOR_MATERIAL)
-    glEnable(GL_NORMALIZE)
-    glShadeModel(GL_SMOOTH)
 
 def main():
-
     changed = False
     fov = 105
     speed = 1
     modestatus = 1
     yrot = speed
     distanceset = 0
+    textures = True
 
     pygame.init()
 
@@ -94,7 +60,6 @@ def main():
     size = width, height = 1280, 720
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Solar-System")
-
 
     splashscreen = pygame.image.load("SunsystemSplash.jpg")
     splashscreen = pygame.transform.scale(splashscreen, (1280, 720))
@@ -118,17 +83,17 @@ def main():
             pygame.time.wait(1)
 
         elif modestatus == 2:
-            screen = pygame.display.set_mode(size, DOUBLEBUF | OPENGL)
+            distanceset = 0
 
-            #setupLighting()
+            screen = pygame.display.set_mode(size, DOUBLEBUF | OPENGL)
 
             gluPerspective(fov, (size[0] / size[1]), 0.1, 100.0)
 
             glEnable(GL_TEXTURE_2D)
 
             sphere = gluNewQuadric()
-            gluQuadricNormals(sphere,GLU_SMOOTH)
-            gluQuadricTexture(sphere,GL_TRUE)
+            gluQuadricNormals(sphere, GLU_SMOOTH)
+            gluQuadricTexture(sphere, GL_TRUE)
 
             modestatus = 3
 
@@ -145,70 +110,67 @@ def main():
 
             glPushMatrix()
 
-            glRotatef(yrot,0,1,0)
+            glRotatef(yrot, 0, 1, 0)
 
-            Sphere1(1,sphere)
+            Sphere1(1, sphere)
 
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(4.5*yrot,0,1,0.3)
-            glTranslatef(2,0,0)
-            Sphere2(0.035,sphere)
+            glRotatef(4.5 * yrot, 0, 1, 0.3)
+            glTranslatef(2, 0, 0)
+            Sphere2(0.035, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(1.6*yrot,0,1,0.3)
-            glTranslatef(3,0,0)
-            Sphere2(0.086,sphere)
+            glRotatef(1.6 * yrot, 0, 1, 0.3)
+            glTranslatef(3, 0, 0)
+            Sphere2(0.086, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(yrot,0,1,0.3)
-            glTranslatef(4,0,0)
-            Sphere2(0.091,sphere)
+            glRotatef(yrot, 0, 1, 0.3)
+            glTranslatef(4, 0, 0)
+            Sphere2(0.091, sphere)
 
-            glTranslatef(0.2,0,0)
-            glRotatef(12*yrot,0,1,0.3)
-            Sphere2(0.025,sphere)
+            glRotatef(12 * yrot, 0, 1, 0)
+            glTranslatef(0.2, 0, 0.1)
+            Sphere2(0.025, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(yrot/2,0,1,0.3)
-            glTranslatef(5,0,0)
-            Sphere2(0.049,sphere)
+            glRotatef(yrot / 2, 0, 1, 0.3)
+            glTranslatef(5, 0, 0)
+            Sphere2(0.049, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(yrot/12,0,1,0.3)
-            glTranslatef(7,0,0)
-            Sphere2(0.102,sphere)
+            glRotatef(yrot / 12, 0, 1, 0.3)
+            glTranslatef(7, 0, 0)
+            Sphere2(0.102, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(yrot/30,0,1,0.3)
-            glTranslatef(9,0,0)
-            Sphere2(0.086,sphere)
+            glRotatef(yrot / 30, 0, 1, 0.3)
+            glTranslatef(9, 0, 0)
+            Sphere2(0.086, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(yrot/84,0,1,0.3)
-            glTranslatef(11,0,0)
-            Sphere2(0.037,sphere)
+            glRotatef(yrot / 84, 0, 1, 0.3)
+            glTranslatef(11, 0, 0)
+            Sphere2(0.037, sphere)
             glPopMatrix()
 
             glPushMatrix()
-            glRotatef(yrot/164,0,1,0.3)
-            glTranslatef(12,0,0)
-            Sphere2(0.035,sphere)
+            glRotatef(yrot / 164, 0, 1, 0.3)
+            glTranslatef(12, 0, 0)
+            Sphere2(0.035, sphere)
             glPopMatrix()
 
             yrot += speed
 
-
             pygame.time.wait(10)
-
-
 
             for event in pygame.event.get():
 
@@ -238,11 +200,17 @@ def main():
                         gluPerspective(fov, (size[0] / size[1]), 0.1, 50.0)
                         distanceset = 0
 
+                    elif event.button == 1 and textures == True:
+                        glDisable(GL_TEXTURE_2D)
+                        textures = False
+                    elif event.button == 1 and textures == False:
+                        glEnable(GL_TEXTURE_2D)
+                        textures = True
+
 
         elif modestatus == 4:
             screen = pygame.display.set_mode(size)
             modestatus = 1
-
 
         pygame.display.flip()
 
