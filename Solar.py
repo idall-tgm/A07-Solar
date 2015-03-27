@@ -14,9 +14,17 @@ import pyglet.image
 from pyglet.gl import *
 
 
-def Sphere1(radius, sphere):
-    image = pyglet.image.load("sonne.png")
+def setTexture(filename):
+    image = pyglet.image.load(filename)
     texture = image.get_texture()
+    return texture
+
+def Sphere1(radius, sphere, filename, textureset):
+
+    if textureset == False:
+        texture = setTexture(filename)
+        textureset = True
+
     glBindTexture(texture.target, texture.id)
 
     '''
@@ -50,6 +58,7 @@ def main():
     yrot = speed
     distanceset = 0
     textures = True
+    textureset = False
 
     pygame.init()
 
@@ -112,7 +121,7 @@ def main():
 
             glRotatef(yrot, 0, 1, 0)
 
-            Sphere1(1, sphere)
+            Sphere1(1, sphere, "sonne.png", False)
 
             glPopMatrix()
 
