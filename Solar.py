@@ -13,18 +13,13 @@ import sys
 import pyglet.image
 from pyglet.gl import *
 
-
-def setTexture(filename):
+def loadTexture(filename):
     image = pyglet.image.load(filename)
+    return image
+
+def Sphere1(radius, sphere, image):
+
     texture = image.get_texture()
-    return texture
-
-def Sphere1(radius, sphere, filename, textureset):
-
-    if textureset == False:
-        texture = setTexture(filename)
-        textureset = True
-
     glBindTexture(texture.target, texture.id)
 
     '''
@@ -35,10 +30,15 @@ def Sphere1(radius, sphere, filename, textureset):
     '''
 
     # glColor4f(1,1,0.2,1)
-    gluSphere(sphere, radius, 20, 20)
+    gluSphere(sphere, radius, 50, 50)
 
 
-def Sphere2(radius, sphere):
+def Sphere2(radius, sphere, image):
+
+    texture = image.get_texture()
+    glBindTexture(texture.target, texture.id)
+
+
     '''
     rawimage = image.get_image_data()
     format = 'RGBA'
@@ -59,6 +59,9 @@ def main():
     distanceset = 0
     textures = True
     textureset = False
+
+    suntexture = loadTexture("sonne.png")
+    merkurtexture = loadTexture("merkur.jpg")
 
     pygame.init()
 
@@ -104,6 +107,7 @@ def main():
             gluQuadricNormals(sphere, GLU_SMOOTH)
             gluQuadricTexture(sphere, GL_TRUE)
 
+
             modestatus = 3
 
 
@@ -121,63 +125,66 @@ def main():
 
             glRotatef(yrot, 0, 1, 0)
 
-            Sphere1(1, sphere, "sonne.png", False)
+            Sphere1(1, sphere, suntexture)
 
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(4.5 * yrot, 0, 1, 0.3)
             glTranslatef(2, 0, 0)
-            Sphere2(0.035, sphere)
+            Sphere2(0.035, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(1.6 * yrot, 0, 1, 0.3)
             glTranslatef(3, 0, 0)
-            Sphere2(0.086, sphere)
+            Sphere2(0.086, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(yrot, 0, 1, 0.3)
             glTranslatef(4, 0, 0)
-            Sphere2(0.091, sphere)
+            Sphere2(0.091, sphere, merkurtexture)
 
             glRotatef(12 * yrot, 0, 1, 0)
             glTranslatef(0.2, 0, 0.1)
-            Sphere2(0.025, sphere)
+            Sphere2(0.025, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(yrot / 2, 0, 1, 0.3)
             glTranslatef(5, 0, 0)
-            Sphere2(0.049, sphere)
+            Sphere2(0.049, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(yrot / 12, 0, 1, 0.3)
             glTranslatef(7, 0, 0)
-            Sphere2(0.102, sphere)
+            Sphere2(0.102, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(yrot / 30, 0, 1, 0.3)
             glTranslatef(9, 0, 0)
-            Sphere2(0.086, sphere)
+            Sphere2(0.086, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(yrot / 84, 0, 1, 0.3)
             glTranslatef(11, 0, 0)
-            Sphere2(0.037, sphere)
+            Sphere2(0.037, sphere, merkurtexture)
             glPopMatrix()
 
             glPushMatrix()
             glRotatef(yrot / 164, 0, 1, 0.3)
             glTranslatef(12, 0, 0)
-            Sphere2(0.035, sphere)
+            Sphere2(0.035, sphere, merkurtexture)
             glPopMatrix()
 
             yrot += speed
+
+            if textureset == False:
+                textureset = True
 
             pygame.time.wait(10)
 
@@ -200,13 +207,13 @@ def main():
                         fov -= 5
                         glLoadIdentity()
 
-                        gluPerspective(fov, (size[0] / size[1]), 0.1, 50.0)
+                        gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
                         distanceset = 0
 
                     elif event.button == 5 and fov < 150:
                         fov += 5
                         glLoadIdentity()
-                        gluPerspective(fov, (size[0] / size[1]), 0.1, 50.0)
+                        gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
                         distanceset = 0
 
                     elif event.button == 1 and textures == True:
@@ -215,6 +222,7 @@ def main():
                     elif event.button == 1 and textures == False:
                         glEnable(GL_TEXTURE_2D)
                         textures = True
+
 
 
         elif modestatus == 4:
