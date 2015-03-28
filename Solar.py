@@ -58,10 +58,7 @@ def main():
     yrot = speed
     distanceset = 0
     textures = True
-    textureset = False
-
-    suntexture = loadTexture("sonne.png")
-    merkurtexture = loadTexture("merkur.jpg")
+    cammode = 1
 
     pygame.init()
 
@@ -107,6 +104,11 @@ def main():
             gluQuadricNormals(sphere, GLU_SMOOTH)
             gluQuadricTexture(sphere, GL_TRUE)
 
+            suntexture = loadTexture("sonne.png")
+            merkurtexture = loadTexture("merkur.jpg")
+
+            textureset = False
+
 
             modestatus = 3
 
@@ -115,8 +117,11 @@ def main():
 
         elif modestatus == 3:
 
-            if distanceset == 0:
-                glTranslatef(0.0, 0.0, -7)
+            if distanceset == 0 and cammode == 1:
+                gluLookAt(0,0,7,0,0,0,0,1,0)
+                distanceset = 1
+            elif distanceset == 0 and cammode == 2:
+                gluLookAt(0,5,7,0,0,0,0,1,0)
                 distanceset = 1
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -144,8 +149,10 @@ def main():
             glPushMatrix()
             glRotatef(yrot, 0, 1, 0.3)
             glTranslatef(4, 0, 0)
+            glRotatef(yrot*3, 0, 1, 0)
             Sphere2(0.091, sphere, merkurtexture)
 
+            glRotatef(-yrot*5, 0, 1, 0)
             glRotatef(12 * yrot, 0, 1, 0)
             glTranslatef(0.2, 0, 0.1)
             Sphere2(0.025, sphere, merkurtexture)
@@ -201,6 +208,19 @@ def main():
                         speed += 0.5
                     if event.key == pygame.K_LEFT and speed > 0:
                         speed -= 0.5
+                    if event.key == pygame.K_UP and cammode == 1:
+                        cammode = 2
+                        glLoadIdentity()
+
+                        gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
+                        distanceset = 0
+
+                    if event.key == pygame.K_DOWN and cammode == 2:
+                        cammode = 1
+                        glLoadIdentity()
+
+                        gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
+                        distanceset = 0
 
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 4 and fov > 50:
@@ -223,6 +243,7 @@ def main():
                         glEnable(GL_TEXTURE_2D)
                         textures = True
 
+            glFlush()
 
 
         elif modestatus == 4:
