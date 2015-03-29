@@ -59,6 +59,7 @@ def main():
     distanceset = 0
     textures = True
     cammode = 1
+    lighting = True
 
     pygame.init()
 
@@ -96,12 +97,23 @@ def main():
 
             screen = pygame.display.set_mode(size, DOUBLEBUF | OPENGL)
 
-            gluPerspective(fov, (size[0] / size[1]), 0.1, 100.0)
-
             glEnable(GL_TEXTURE_2D)
 
+            glEnable(GL_LIGHTING)
+
+            glEnable(GL_NORMALIZE)
+
+            glEnable(GL_LIGHT0)
+
+            light_position1 = [0, 1, 0, 0]
+            glLight(GL_LIGHT0, GL_POSITION, light_position1)
+
+            light_color = [1, 1, 1, 0.5]
+            glLight(GL_LIGHT0, GL_AMBIENT, light_color)
+
+
             sphere = gluNewQuadric()
-            gluQuadricNormals(sphere, GLU_SMOOTH)
+            gluQuadricNormals(sphere, GL_FLAT)
             gluQuadricTexture(sphere, GL_TRUE)
 
             suntexture = loadTexture("sonne.png")
@@ -109,6 +121,7 @@ def main():
 
             textureset = False
 
+            gluPerspective(fov, (size[0] / size[1]), 1.0, 100.0)
 
             modestatus = 3
 
@@ -130,7 +143,13 @@ def main():
 
             glRotatef(yrot, 0, 1, 0)
 
+            if lighting == True:
+                glDisable(GL_LIGHTING)
+
             Sphere1(1, sphere, suntexture)
+
+            if lighting == True:
+                glEnable(GL_LIGHTING)
 
             glPopMatrix()
 
@@ -222,18 +241,26 @@ def main():
                         gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
                         distanceset = 0
 
+                    if event.key == pygame.K_l and lighting:
+                        glDisable(GL_LIGHTING)
+                        lighting = False
+
+                    elif event.key == pygame.K_l and lighting == False:
+                        glEnable(GL_LIGHTING)
+                        lighting = True
+
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 4 and fov > 50:
                         fov -= 5
                         glLoadIdentity()
 
-                        gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
+                        gluPerspective(fov, (size[0] / size[1]), 1.0, 100)
                         distanceset = 0
 
                     elif event.button == 5 and fov < 150:
                         fov += 5
                         glLoadIdentity()
-                        gluPerspective(fov, (size[0] / size[1]), 0.1, 100)
+                        gluPerspective(fov, (size[0] / size[1]), 1.0, 100)
                         distanceset = 0
 
                     elif event.button == 1 and textures == True:
